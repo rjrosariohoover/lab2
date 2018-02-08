@@ -1,16 +1,20 @@
-import pygame, sys, launcher
-from launcher import *
+#!/usr/bin.python
+
+import pygame, sys
 from pygame.locals import *
+import numpy as np
+import math
+
+import launcher
+import rock
 from colors import *
+
 
 HEIGHT = 400
 WIDTH = 500
 FPS = 30
-angle = 90
 
-pygame.init()
 
-surf = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
 
 # define game world
 def draw_world(surf):
@@ -32,24 +36,36 @@ def draw_world(surf):
     
 def main():
     pygame.init()
-    fprClock = pygame.time.Clock()
+    fpsClock = pygame.time.Clock()
     surf = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
+    my_launcher = launcher.Launcher(0,HEIGHT-20)
+    my_rock = rock.Rock(0, HEIGHT-20) #TODO
 
-while True:
-    draw_world(surf)
-    draw_launcher(surf)
-    for event in pygame.event.get():
-        pygame.key.get_pressed() == KEYDOWN
-        if event.type == KEYDOWN:
-            if event.key == pygame.K_UP:
-                launcher.changeAngle(3)
-            if event.key == pygame.K_DOWN:
-                launcher.changeAngle(-3)
-            #if event.key == pygame.K_RIGHT:
-             #   launcher.changeMagnitude(1.1)
-            #if event.key == pygame.K_LEFT:
-             #   launcher.changeMagnitude(-1.1)
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+    while True:
+        for event in pygame.event.get():            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    my_launcher.changeAngle(3)
+                if event.key == pygame.K_DOWN:
+                    my_launcher.changeAngle(-3)
+                if event.key == pygame.K_RIGHT:
+                    my_launcher.changeMagnitude(5)
+                if event.key == pygame.K_LEFT:
+                    my_launcher.changeMagnitude(-5)
+                if (event.key == pygame.K_SPACE) and (not my_rock.ismoving()):
+                    my_launcher.fire(my_rock)
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+                
+        #2. Do game logic
+        my_rock.move(1.0/FPS)
+        
+
+        # 3. Draw everything
+        draw_world(surf)
+        my_launcher.draw_launcher(surf)
+        my_rock.draw(surf)
         pygame.display.update()
+        fpsClock.tick(FPS)
+main()
