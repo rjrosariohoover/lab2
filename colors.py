@@ -1,0 +1,7 @@
+# colors file
+BACKGROUND = (0,75,200)
+BLACK = (0,0,0)
+GREEN = (0,220,20)
+LAUNCHER = (150,20,40)
+ROCK_COLOR = (200,20,200)
+
